@@ -60,8 +60,22 @@ const Messages = () => {
       fetchMessages(selectedUserId);
       pollingRef.current = setInterval(() => fetchMessages(selectedUserId), 10000);
     }
-    return () => clearInterval(pollingRef.current);
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
   }, [selectedUserId, fetchMessages]);
+
+  useEffect(() => {
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
+  }, []);
 
   const selectConversation = (userId, username) => {
     setSelectedUserId(userId);

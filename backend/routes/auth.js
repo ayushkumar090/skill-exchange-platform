@@ -23,7 +23,10 @@ router.post('/login', async (req, res, next) => {
     if (!email || !password) {
       return res.status(400).json({ success: false, error: 'Please provide email and password' });
     }
-    const user = await User.findOne({ email }).select('+password');
+    if (typeof email !== 'string' || typeof password !== 'string') {
+      return res.status(400).json({ success: false, error: 'Invalid input format' });
+    }
+    const user = await User.findOne({ email: email.toLowerCase().trim() }).select('+password');
     if (!user) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
@@ -63,10 +66,14 @@ router.get('/me', protect, async (req, res, next) => {
 
 router.put('/profile', protect, async (req, res, next) => {
   try {
-    const { bio, role } = req.body;
+    const bio = typeof req.body.bio === 'string' ? req.body.bio : undefined;
+    const role = typeof req.body.role === 'string' ? req.body.role : undefined;
+    const updateFields = {};
+    if (bio !== undefined) updateFields.bio = bio;
+    if (role !== undefined) updateFields.role = role;
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { bio, role },
+      updateFields,
       { new: true, runValidators: true }
     );
     res.json({ success: true, data: user });

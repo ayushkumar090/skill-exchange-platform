@@ -125,4 +125,3 @@ Services:
 ## License
 
 MIT
-Neighborhood Skill Exchange Platform - Learn and teach skills locally

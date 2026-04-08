@@ -32,9 +32,9 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+app.use('/api/', apiLimiter);
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
-app.use('/api/', apiLimiter);
 
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/skills', require('./routes/skills'));

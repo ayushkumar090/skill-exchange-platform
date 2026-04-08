@@ -69,6 +69,7 @@ const Skills = () => {
     try {
       await api.post('/skills/user', { skillId: selectedLibrarySkill._id, ...addForm });
       setSuccess('Skill added to your profile!');
+      setTimeout(() => setSuccess(''), 3000);
       setShowAddModal(false);
       fetchUserSkills();
     } catch (err) {
@@ -84,6 +85,7 @@ const Skills = () => {
     try {
       await api.post('/skills/library', newSkillForm);
       setSuccess('Skill added to library!');
+      setTimeout(() => setSuccess(''), 3000);
       setShowNewSkillForm(false);
       setNewSkillForm({ skillName: '', category: '', detailedDescription: '' });
       fetchLibrary();
