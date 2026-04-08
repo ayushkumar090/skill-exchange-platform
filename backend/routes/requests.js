@@ -36,15 +36,12 @@ router.post('/', protect, async (req, res, next) => {
       userSkillNeededId,
       message,
     });
-    const populated = await request
-      .populate('senderUserId', 'username email')
-      .then((r) =>
-        r.populate({
-          path: 'userSkillNeededId',
-          populate: { path: 'skillId userId', select: 'skillName category username email' },
-        })
-      );
-    res.status(201).json({ success: true, data: populated });
+    await request.populate('senderUserId', 'username email');
+    await request.populate({
+      path: 'userSkillNeededId',
+      populate: { path: 'skillId userId', select: 'skillName category username email' },
+    });
+    res.status(201).json({ success: true, data: request });
   } catch (err) {
     next(err);
   }

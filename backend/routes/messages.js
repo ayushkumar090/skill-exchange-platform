@@ -34,10 +34,9 @@ router.post('/', protect, async (req, res, next) => {
       recipientUserId,
       message,
     });
-    const populated = await msg
-      .populate('senderUserId', 'username')
-      .then((m) => m.populate('recipientUserId', 'username'));
-    res.status(201).json({ success: true, data: populated });
+    await msg.populate('senderUserId', 'username');
+    await msg.populate('recipientUserId', 'username');
+    res.status(201).json({ success: true, data: msg });
   } catch (err) {
     next(err);
   }

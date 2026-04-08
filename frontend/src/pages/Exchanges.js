@@ -96,7 +96,7 @@ const Exchanges = () => {
     try {
       await api.post('/exchanges', {
         ...form,
-        duration: form.duration ? parseInt(form.duration) : undefined,
+        duration: form.duration ? parseInt(form.duration, 10) : undefined,
       });
       setSuccess('Exchange created!');
       setShowForm(false);
