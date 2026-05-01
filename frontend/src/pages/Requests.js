@@ -12,6 +12,7 @@ const Requests = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchRequests(); }, []);
 
   const fetchRequests = async () => {

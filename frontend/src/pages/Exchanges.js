@@ -76,6 +76,7 @@ const Exchanges = () => {
 
   const currentUserId = user?._id || user?.id;
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { fetchExchanges(); fetchAcceptedRequests(); }, []);
 
   const fetchExchanges = async () => {
