@@ -29,55 +29,78 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center px-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-br from-primary-600 via-primary-700 to-violet-700 dark:from-slate-900 dark:via-slate-900 dark:to-slate-800 flex items-center justify-center px-4 py-12">
+      {/* Decorative blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-white/5 blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-violet-500/10 blur-3xl"></div>
+      </div>
+
+      <div className="relative w-full max-w-md">
+        {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Welcome Back</h1>
-          <p className="text-gray-500 mt-2">Sign in to Skill Exchange</p>
+          <span className="text-5xl" aria-hidden="true">⚡</span>
+          <p className="text-white/70 text-sm mt-2 font-medium tracking-wider uppercase">Skill Exchange</p>
         </div>
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
-            {error}
+
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome back</h1>
+            <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">Sign in to your account</p>
           </div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="you@example.com"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="••••••••"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {loading ? 'Signing in...' : 'Sign In'}
-          </button>
-        </form>
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 hover:text-blue-700 font-medium">
-            Register here
-          </Link>
-        </p>
+
+          {error && <div className="alert-error mb-6">{error}</div>}
+
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label htmlFor="login-email" className="form-label">Email</label>
+              <input
+                id="login-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="form-input"
+                placeholder="you@example.com"
+                autoComplete="email"
+              />
+            </div>
+            <div>
+              <label htmlFor="login-password" className="form-label">Password</label>
+              <input
+                id="login-password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="form-input"
+                placeholder="••••••••"
+                autoComplete="current-password"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full py-3 text-base mt-2"
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="spinner h-4 w-4"></span>
+                  Signing in…
+                </span>
+              ) : 'Sign In'}
+            </button>
+          </form>
+
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-6">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-primary-600 dark:text-primary-400 hover:underline font-medium">
+              Create one
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Login;
+

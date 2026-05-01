@@ -1,3 +1,165 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ── Design Tokens ─────────────────────────────────────────── */
+:root {
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.25rem;
+
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+  --shadow-card-hover: 0 10px 25px -5px rgb(0 0 0 / 0.12), 0 4px 10px -5px rgb(0 0 0 / 0.08);
+
+  --transition-base: 200ms ease;
+  --transition-lift: 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── Base Reset ────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 antialiased;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.dark body {
+  @apply bg-slate-900 text-slate-100;
+}
+
+/* ── Focus visible ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-slate-100 dark:bg-slate-800;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 dark:bg-slate-600 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400 dark:bg-slate-500;
+}
+
+/* ── Reduced Motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Reusable component helpers ────────────────────────────── */
+@layer components {
+  /* Card base */
+  .card {
+    @apply bg-white dark:bg-slate-800 rounded-xl shadow-card border border-slate-100 dark:border-slate-700 transition-all duration-200;
+  }
+  .card-hover {
+    @apply hover:shadow-card-hover hover:-translate-y-0.5;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-primary-600 text-white text-sm font-medium
+           hover:bg-primary-700 focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2
+           active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed
+           transition-all duration-200;
+  }
+
+  /* Ghost / secondary button */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300
+           text-sm font-medium hover:bg-slate-200 dark:hover:bg-slate-600
+           focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2
+           active:scale-95 disabled:opacity-50
+           transition-all duration-200;
+  }
+
+  /* Danger button */
+  .btn-danger {
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-rose-500 text-white text-sm font-medium
+           hover:bg-rose-600 focus-visible:ring-2 focus-visible:ring-rose-400 focus-visible:ring-offset-2
+           active:scale-95 disabled:opacity-50
+           transition-all duration-200;
+  }
+
+  /* Success button */
+  .btn-success {
+    @apply inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-emerald-500 text-white text-sm font-medium
+           hover:bg-emerald-600 focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-2
+           active:scale-95 disabled:opacity-50
+           transition-all duration-200;
+  }
+
+  /* Form input */
+  .form-input {
+    @apply w-full px-4 py-2.5 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600
+           rounded-lg text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
+           transition-colors duration-200;
+  }
+
+  /* Form label */
+  .form-label {
+    @apply block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5;
+  }
+
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  /* Page container */
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8;
+  }
+
+  /* Page heading */
+  .page-heading {
+    @apply text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white;
+  }
+
+  /* Section heading */
+  .section-heading {
+    @apply text-lg font-semibold text-slate-700 dark:text-slate-200;
+  }
+
+  /* Alert — success */
+  .alert-success {
+    @apply bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700
+           text-emerald-800 dark:text-emerald-300 px-4 py-3 rounded-lg text-sm;
+  }
+
+  /* Alert — error */
+  .alert-error {
+    @apply bg-rose-50 dark:bg-rose-900/30 border border-rose-200 dark:border-rose-700
+           text-rose-800 dark:text-rose-300 px-4 py-3 rounded-lg text-sm;
+  }
+
+  /* Spinner */
+  .spinner {
+    @apply animate-spin rounded-full border-b-2 border-primary-600;
+  }
+}
+

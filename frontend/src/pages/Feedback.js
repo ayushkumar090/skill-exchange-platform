@@ -3,13 +3,16 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
 const StarPicker = ({ value, onChange }) => (
-  <div className="flex gap-1">
+  <div className="flex gap-1" role="group" aria-label="Rating">
     {[1, 2, 3, 4, 5].map((star) => (
       <button
         key={star}
         type="button"
         onClick={() => onChange(star)}
-        className={`text-2xl transition-colors ${star <= value ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-300'}`}
+        aria-label={`${star} star${star !== 1 ? 's' : ''}`}
+        className={`text-2xl transition-all duration-150 hover:scale-125 ${
+          star <= value ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600 hover:text-amber-300'
+        }`}
       >
         ★
       </button>
@@ -18,9 +21,9 @@ const StarPicker = ({ value, onChange }) => (
 );
 
 const StarDisplay = ({ rating }) => (
-  <div className="flex gap-0.5">
+  <div className="flex gap-0.5" aria-label={`Rating: ${rating} out of 5`}>
     {[1, 2, 3, 4, 5].map((star) => (
-      <span key={star} className={star <= Math.round(rating) ? 'text-yellow-400' : 'text-gray-300'}>★</span>
+      <span key={star} className={star <= Math.round(rating) ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'} aria-hidden="true">★</span>
     ))}
   </div>
 );
@@ -37,9 +40,7 @@ const Feedback = () => {
 
   const currentUserId = user?._id || user?.id;
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  useEffect(() => { fetchData(); }, []);
 
   const fetchData = async () => {
     try {
@@ -47,41 +48,26 @@ const Feedback = () => {
       const res = await api.get('/exchanges');
       const completed = res.data.data.filter((e) => e.completedStatus);
       setExchanges(completed);
-
       const map = {};
-      await Promise.all(
-        completed.map(async (ex) => {
-          try {
-            const fbRes = await api.get(`/feedback/${ex._id}`);
-            map[ex._id] = fbRes.data.data;
-          } catch {
-            map[ex._id] = [];
-          }
-        })
-      );
+      await Promise.all(completed.map(async (ex) => {
+        try { const fbRes = await api.get(`/feedback/${ex._id}`); map[ex._id] = fbRes.data.data; }
+        catch { map[ex._id] = []; }
+      }));
       setFeedbackMap(map);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) { console.error(err); }
+    finally { setLoading(false); }
   };
 
   const handleSubmit = async () => {
     setError('');
-    if (!form.exchangeId) {
-      setError('Please select an exchange');
-      return;
-    }
+    if (!form.exchangeId) { setError('Please select an exchange'); return; }
     try {
       await api.post('/feedback', form);
       setSuccess('Feedback submitted!');
       setShowForm(false);
       setForm({ exchangeId: '', rating: 5, detailedReview: '' });
       fetchData();
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to submit feedback');
-    }
+    } catch (err) { setError(err.response?.data?.error || 'Failed to submit feedback'); }
   };
 
   const hasGivenFeedback = (exchangeId) => {
@@ -95,31 +81,24 @@ const Feedback = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="page-container">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Feedback</h1>
-        <button
-          onClick={() => { setShowForm(!showForm); setError(''); }}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
-        >
+        <h1 className="page-heading">Feedback</h1>
+        <button onClick={() => { setShowForm(!showForm); setError(''); }} className="btn-primary">
           + Leave Feedback
         </button>
       </div>
 
-      {success && <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">{success}</div>}
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">{error}</div>}
+      {success && <div className="alert-success mb-4">{success}</div>}
+      {error && <div className="alert-error mb-4">{error}</div>}
 
       {showForm && (
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-blue-100">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">Submit Feedback</h2>
+        <div className="card p-6 mb-6 border-l-4 border-primary-500">
+          <h2 className="section-heading mb-4">Submit Feedback</h2>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Exchange</label>
-              <select
-                value={form.exchangeId}
-                onChange={(e) => setForm({ ...form, exchangeId: e.target.value })}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-              >
+              <label className="form-label">Exchange</label>
+              <select value={form.exchangeId} onChange={(e) => setForm({ ...form, exchangeId: e.target.value })} className="form-input">
                 <option value="">Select a completed exchange</option>
                 {exchanges.filter((e) => !hasGivenFeedback(e._id)).map((ex) => {
                   const isOffer = ex.offerUserId?._id === currentUserId || ex.offerUserId === currentUserId;
@@ -134,39 +113,32 @@ const Feedback = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+              <label className="form-label">Rating</label>
               <StarPicker value={form.rating} onChange={(r) => setForm({ ...form, rating: r })} />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Review (optional)</label>
-              <textarea
-                value={form.detailedReview}
-                onChange={(e) => setForm({ ...form, detailedReview: e.target.value })}
-                rows={3}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm"
-                placeholder="Share your experience..."
-              />
+              <label className="form-label">Review <span className="text-slate-400 font-normal">(optional)</span></label>
+              <textarea value={form.detailedReview} onChange={(e) => setForm({ ...form, detailedReview: e.target.value })}
+                rows={3} className="form-input resize-none" placeholder="Share your experience…" />
             </div>
             <div className="flex gap-3">
-              <button onClick={handleSubmit} className="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">Submit</button>
-              <button onClick={() => setShowForm(false)} className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">Cancel</button>
+              <button onClick={handleSubmit} className="btn-primary">Submit</button>
+              <button onClick={() => setShowForm(false)} className="btn-ghost">Cancel</button>
             </div>
           </div>
         </div>
       )}
 
       {loading ? (
-        <div className="flex justify-center py-12">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
-        </div>
+        <div className="flex justify-center py-16"><div className="spinner h-10 w-10"></div></div>
       ) : exchanges.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
-          <div className="text-5xl mb-3">⭐</div>
-          <p className="text-lg">No completed exchanges yet</p>
+        <div className="text-center py-20 text-slate-400 dark:text-slate-500">
+          <div className="text-6xl mb-4" aria-hidden="true">⭐</div>
+          <p className="text-lg font-medium">No completed exchanges yet</p>
           <p className="text-sm mt-1">Complete an exchange to leave feedback.</p>
         </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-5">
           {exchanges.map((ex) => {
             const isOffer = ex.offerUserId?._id === currentUserId || ex.offerUserId === currentUserId;
             const partner = isOffer ? ex.recipientUserId : ex.offerUserId;
@@ -175,42 +147,47 @@ const Feedback = () => {
             const avg = avgRating(feedbacks);
 
             return (
-              <div key={ex._id} className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
-                <div className="flex items-start justify-between mb-4">
+              <div key={ex._id} className="card p-6">
+                <div className="flex items-start justify-between mb-4 flex-wrap gap-2">
                   <div>
-                    <h3 className="font-semibold text-gray-800">
+                    <h3 className="font-semibold text-slate-900 dark:text-white">
                       Exchange with {partner?.username || 'Unknown'} — {skill?.skillName || 'Skill'}
                     </h3>
                     {avg !== null && (
                       <div className="flex items-center gap-2 mt-1">
                         <StarDisplay rating={avg} />
-                        <span className="text-sm text-gray-500">{avg.toFixed(1)} avg ({feedbacks.length} review{feedbacks.length !== 1 ? 's' : ''})</span>
+                        <span className="text-sm text-slate-500 dark:text-slate-400">
+                          {avg.toFixed(1)} avg ({feedbacks.length} review{feedbacks.length !== 1 ? 's' : ''})
+                        </span>
                       </div>
                     )}
                   </div>
                   {!hasGivenFeedback(ex._id) && (
                     <button
                       onClick={() => { setForm({ ...form, exchangeId: ex._id }); setShowForm(true); }}
-                      className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                      className="btn-primary py-1.5 text-xs"
                     >
                       Leave Feedback
                     </button>
                   )}
                 </div>
+
                 {feedbacks.length > 0 ? (
                   <div className="space-y-3">
                     {feedbacks.map((fb) => (
-                      <div key={fb._id} className="bg-gray-50 rounded-lg p-3">
+                      <div key={fb._id} className="bg-slate-50 dark:bg-slate-700/50 rounded-xl p-4">
                         <div className="flex items-center gap-2 mb-1">
                           <StarDisplay rating={fb.rating} />
-                          <span className="text-sm font-medium text-gray-700">{fb.givenByUserId?.username}</span>
+                          <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{fb.givenByUserId?.username}</span>
                         </div>
-                        {fb.detailedReview && <p className="text-sm text-gray-600 italic">"{fb.detailedReview}"</p>}
+                        {fb.detailedReview && (
+                          <p className="text-sm text-slate-600 dark:text-slate-400 italic">"{fb.detailedReview}"</p>
+                        )}
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-gray-400 italic">No feedback yet for this exchange.</p>
+                  <p className="text-sm text-slate-400 dark:text-slate-500 italic">No feedback yet for this exchange.</p>
                 )}
               </div>
             );
@@ -222,3 +199,4 @@ const Feedback = () => {
 };
 
 export default Feedback;
+
