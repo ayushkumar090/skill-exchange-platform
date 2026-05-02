@@ -45,14 +45,10 @@ const Messages = () => {
     }
   }, []);
 
-  useEffect(() => {
-    fetchConversations();
-  }, [fetchConversations]);
+  useEffect(() => { fetchConversations(); }, [fetchConversations]);
 
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   useEffect(() => {
@@ -92,9 +88,8 @@ const Messages = () => {
       setMessages((prev) => [...prev, res.data.data]);
       setNewMessage('');
       if (!selectedUserId && newConvoUserId) {
-        const username = newConvoUserId;
         setSelectedUserId(newConvoUserId);
-        setSelectedUsername(username);
+        setSelectedUsername(newConvoUserId);
         setNewConvoUserId('');
         fetchConversations();
       }
@@ -103,25 +98,22 @@ const Messages = () => {
     }
   };
 
-  const handleRefresh = () => {
-    if (selectedUserId) fetchMessages(selectedUserId);
-  };
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Messages</h1>
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">{error}</div>}
+    <div className="page-container">
+      <h1 className="page-heading mb-6">Messages</h1>
+      {error && <div className="alert-error mb-4">{error}</div>}
 
       <div className="flex gap-4 h-[600px]">
-        <div className="w-72 bg-white rounded-xl shadow-md border border-gray-100 flex flex-col">
-          <div className="p-4 border-b border-gray-100">
-            <h2 className="font-semibold text-gray-700">Conversations</h2>
+        {/* Sidebar */}
+        <div className="w-64 flex-shrink-0 card flex flex-col overflow-hidden">
+          <div className="p-4 border-b border-slate-100 dark:border-slate-700">
+            <h2 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">Conversations</h2>
           </div>
           <div className="flex-1 overflow-y-auto">
             {loading ? (
-              <div className="flex justify-center p-8"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div></div>
+              <div className="flex justify-center p-8"><div className="spinner h-8 w-8"></div></div>
             ) : conversations.length === 0 ? (
-              <div className="p-4 text-center text-gray-400 text-sm">
+              <div className="p-4 text-center text-slate-400 dark:text-slate-500 text-sm">
                 <p>No conversations yet.</p>
                 <p className="mt-1">Complete an exchange to start chatting!</p>
               </div>
@@ -130,47 +122,67 @@ const Messages = () => {
                 <button
                   key={id}
                   onClick={() => selectConversation(id, username)}
-                  className={`w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 ${selectedUserId === id ? 'bg-blue-50 border-l-2 border-l-blue-600' : ''}`}
+                  className={`w-full text-left px-4 py-3 transition-colors border-b border-slate-50 dark:border-slate-700/50 hover:bg-primary-50 dark:hover:bg-slate-700/50 ${
+                    selectedUserId === id
+                      ? 'bg-primary-50 dark:bg-primary-900/20 border-l-2 border-l-primary-600'
+                      : ''
+                  }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold text-sm">
+                    <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-primary-700 dark:text-primary-300 font-semibold text-xs flex-shrink-0">
                       {username?.charAt(0)?.toUpperCase() || '?'}
                     </div>
-                    <span className="font-medium text-gray-700 text-sm">{username}</span>
+                    <span className="font-medium text-slate-700 dark:text-slate-300 text-sm truncate">{username}</span>
                   </div>
                 </button>
               ))
             )}
           </div>
-          <div className="p-3 border-t border-gray-100">
+          <div className="p-3 border-t border-slate-100 dark:border-slate-700">
             <input
               type="text"
-              placeholder="New conversation (user ID)"
+              placeholder="New convo (user ID)"
               value={newConvoUserId}
               onChange={(e) => setNewConvoUserId(e.target.value)}
-              className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="form-input text-xs py-1.5"
             />
           </div>
         </div>
 
-        <div className="flex-1 bg-white rounded-xl shadow-md border border-gray-100 flex flex-col">
+        {/* Chat pane */}
+        <div className="flex-1 card flex flex-col overflow-hidden min-w-0">
           {selectedUserId ? (
             <>
-              <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-                <h2 className="font-semibold text-gray-700">{selectedUsername}</h2>
-                <button onClick={handleRefresh} className="text-blue-600 hover:text-blue-700 text-sm font-medium">↻ Refresh</button>
+              <div className="p-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/40 flex items-center justify-center text-primary-700 dark:text-primary-300 font-bold text-xs">
+                    {selectedUsername?.charAt(0)?.toUpperCase() || '?'}
+                  </div>
+                  <h2 className="font-semibold text-slate-700 dark:text-slate-200 text-sm">{selectedUsername}</h2>
+                </div>
+                <button onClick={() => fetchMessages(selectedUserId)} aria-label="Refresh messages"
+                  className="text-primary-600 dark:text-primary-400 hover:text-primary-700 text-sm font-medium transition-colors">
+                  ↻ Refresh
+                </button>
               </div>
+
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {messages.length === 0 ? (
-                  <div className="flex items-center justify-center h-full text-gray-400 text-sm">No messages yet. Say hi!</div>
+                  <div className="flex items-center justify-center h-full text-slate-400 dark:text-slate-500 text-sm">
+                    No messages yet. Say hi! 👋
+                  </div>
                 ) : (
                   messages.map((msg) => {
                     const isMine = (msg.senderUserId?._id || msg.senderUserId) === currentUserId;
                     return (
                       <div key={msg._id} className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl text-sm ${isMine ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-100 text-gray-800 rounded-bl-none'}`}>
+                        <div className={`max-w-[75%] px-4 py-2.5 rounded-2xl text-sm shadow-sm ${
+                          isMine
+                            ? 'bg-primary-600 text-white rounded-br-none'
+                            : 'bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-bl-none'
+                        }`}>
                           <p>{msg.message}</p>
-                          <p className={`text-xs mt-1 ${isMine ? 'text-blue-200' : 'text-gray-400'}`}>
+                          <p className={`text-xs mt-1 ${isMine ? 'text-primary-200' : 'text-slate-400 dark:text-slate-500'}`}>
                             {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             {isMine && <span className="ml-1">{msg.isRead ? ' ✓✓' : ' ✓'}</span>}
                           </p>
@@ -181,20 +193,23 @@ const Messages = () => {
                 )}
                 <div ref={messagesEndRef} />
               </div>
-              <div className="p-4 border-t border-gray-100">
+
+              <div className="p-4 border-t border-slate-100 dark:border-slate-700">
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
-                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                    placeholder="Type a message..."
+                    className="flex-1 form-input rounded-full"
+                    placeholder="Type a message…"
+                    aria-label="Message input"
                   />
                   <button
                     onClick={handleSend}
                     disabled={!newMessage.trim()}
-                    className="px-5 py-2.5 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                    className="btn-primary rounded-full px-5"
+                    aria-label="Send message"
                   >
                     Send
                   </button>
@@ -202,10 +217,10 @@ const Messages = () => {
               </div>
             </>
           ) : (
-            <div className="flex-1 flex items-center justify-center text-gray-400">
+            <div className="flex-1 flex items-center justify-center text-slate-400 dark:text-slate-500">
               <div className="text-center">
-                <div className="text-5xl mb-3">💬</div>
-                <p className="text-lg font-medium">Select a conversation</p>
+                <div className="text-6xl mb-4" aria-hidden="true">💬</div>
+                <p className="text-lg font-medium text-slate-600 dark:text-slate-400">Select a conversation</p>
                 <p className="text-sm mt-1">or enter a user ID on the left to start a new one</p>
               </div>
             </div>

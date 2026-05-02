@@ -11,12 +11,42 @@ A full-stack web application that connects neighbors to share and learn skills f
 - **Feedback & Ratings** — Leave reviews after exchanges; overall ratings calculated automatically
 - **Messaging** — Real-time-like conversation system between exchange partners
 - **Authentication** — Secure JWT-based registration and login
+- **Light / Dark Theme** — System-preference aware theme toggle, persisted to localStorage
+
+## Design System
+
+The UI is built with **Tailwind CSS** using a custom design token layer (`index.css`). Key decisions:
+
+| Token         | Value                           |
+|---------------|---------------------------------|
+| Primary color | Indigo (`#6366f1` / `primary-*`) |
+| Font          | Inter (Google Fonts)            |
+| Dark mode     | Tailwind `class` strategy       |
+| Radii         | `--radius-*` CSS variables      |
+| Shadows       | `--shadow-card`, `--shadow-card-hover` |
+
+### Theme System
+
+The app supports **light** and **dark** themes via a React context (`ThemeContext`):
+
+- **Default**: follows the OS/browser `prefers-color-scheme` preference.
+- **Toggle**: click the ☀️ / 🌙 icon in the top-right of the navbar.
+- **Persistence**: the chosen theme is stored in `localStorage` under the key `skill-exchange-theme` and restored on next visit.
+
+To programmatically access the theme in a component:
+
+```jsx
+import { useTheme } from '../context/ThemeContext';
+
+const { theme, toggleTheme } = useTheme();
+// theme === 'light' | 'dark'
+```
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | React 18, React Router v6, Axios, Tailwind CSS |
+| Frontend | React 18, React Router v6, Axios, Tailwind CSS v3 |
 | Backend | Node.js, Express 4 |
 | Database | MongoDB with Mongoose |
 | Auth | JWT (jsonwebtoken) + bcryptjs |
@@ -125,3 +155,4 @@ Services:
 ## License
 
 MIT
+

@@ -3,17 +3,22 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import SkillCard from '../components/SkillCard';
 
-const StarRating = ({ rating }) => {
-  return (
-    <div className="flex items-center gap-1">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <span key={star} className={star <= Math.round(rating) ? 'text-yellow-400' : 'text-gray-300'}>
-          ★
-        </span>
-      ))}
-      <span className="text-sm text-gray-500 ml-1">({rating?.toFixed(1) || '0.0'})</span>
-    </div>
-  );
+const StarRating = ({ rating }) => (
+  <div className="flex items-center gap-1">
+    {[1, 2, 3, 4, 5].map((star) => (
+      <span key={star} className={`text-lg ${star <= Math.round(rating) ? 'text-amber-400' : 'text-slate-300 dark:text-slate-600'}`}>
+        ★
+      </span>
+    ))}
+    <span className="text-sm text-slate-500 dark:text-slate-400 ml-1">({rating?.toFixed(1) || '0.0'})</span>
+  </div>
+);
+
+const roleLabels = { both: 'Provider & Learner', provider: 'Provider', learner: 'Learner' };
+const roleColors = {
+  both: 'bg-primary-100 text-primary-800 dark:bg-primary-900/40 dark:text-primary-300',
+  provider: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300',
+  learner: 'bg-violet-100 text-violet-800 dark:bg-violet-900/40 dark:text-violet-300',
 };
 
 const Profile = () => {
@@ -53,82 +58,95 @@ const Profile = () => {
     }
   };
 
+  const initials = user?.username?.slice(0, 2)?.toUpperCase() || '??';
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">My Profile</h1>
+      <h1 className="page-heading mb-6">My Profile</h1>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h2 className="text-2xl font-semibold text-gray-800">{user?.username}</h2>
-            <p className="text-gray-500">{user?.email}</p>
+      {/* Profile card */}
+      <div className="card p-6 mb-6">
+        {/* Avatar + header */}
+        <div className="flex items-start gap-5 mb-6">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-500 to-violet-500 flex items-center justify-center text-white font-bold text-xl flex-shrink-0 shadow-lg">
+            {initials}
           </div>
-          <button
-            onClick={() => { setEditing(!editing); setError(''); setSuccess(''); }}
-            className="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
-          >
-            {editing ? 'Cancel' : 'Edit Profile'}
-          </button>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-start justify-between flex-wrap gap-2">
+              <div>
+                <h2 className="text-xl font-bold text-slate-900 dark:text-white">{user?.username}</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400">{user?.email}</p>
+              </div>
+              <button
+                onClick={() => { setEditing(!editing); setError(''); setSuccess(''); }}
+                className={editing ? 'btn-ghost' : 'btn-primary'}
+              >
+                {editing ? 'Cancel' : 'Edit Profile'}
+              </button>
+            </div>
+            <div className="mt-2">
+              <StarRating rating={user?.overallRating || 0} />
+            </div>
+          </div>
         </div>
 
-        <div className="mb-4">
-          <p className="text-sm text-gray-500 mb-1">Overall Rating</p>
-          <StarRating rating={user?.overallRating || 0} />
-        </div>
-
-        {success && <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-lg text-sm mb-4">{success}</div>}
-        {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm mb-4">{error}</div>}
+        {success && <div className="alert-success mb-4">{success}</div>}
+        {error && <div className="alert-error mb-4">{error}</div>}
 
         {editing ? (
-          <div className="space-y-4">
+          <div className="space-y-4 border-t border-slate-100 dark:border-slate-700 pt-5">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+              <label className="form-label">Bio</label>
               <textarea
                 value={form.bio}
                 onChange={(e) => setForm({ ...form, bio: e.target.value })}
                 rows={4}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                placeholder="Tell the community about yourself..."
+                className="form-input resize-none"
+                placeholder="Tell the community about yourself…"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+              <label className="form-label">Role</label>
               <select
                 value={form.role}
                 onChange={(e) => setForm({ ...form, role: e.target.value })}
-                className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="form-input"
               >
                 <option value="both">Both (Provider & Learner)</option>
                 <option value="provider">Provider</option>
                 <option value="learner">Learner</option>
               </select>
             </div>
-            <button
-              onClick={handleSave}
-              disabled={loading}
-              className="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 transition-colors"
-            >
-              {loading ? 'Saving...' : 'Save Changes'}
+            <button onClick={handleSave} disabled={loading} className="btn-success">
+              {loading ? 'Saving…' : 'Save Changes'}
             </button>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4 border-t border-slate-100 dark:border-slate-700 pt-5">
             <div>
-              <p className="text-sm text-gray-500">Bio</p>
-              <p className="text-gray-700">{user?.bio || <span className="italic text-gray-400">No bio yet</span>}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium mb-1">Bio</p>
+              <p className="text-slate-700 dark:text-slate-300">
+                {user?.bio || <span className="italic text-slate-400">No bio yet</span>}
+              </p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Role</p>
-              <span className="inline-block px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 capitalize">{user?.role}</span>
+              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium mb-1">Role</p>
+              <span className={`badge ${roleColors[user?.role] || 'bg-slate-100 text-slate-700'}`}>
+                {roleLabels[user?.role] || user?.role}
+              </span>
             </div>
           </div>
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">My Skills ({userSkills.length})</h2>
+      {/* Skills */}
+      <div className="card p-6">
+        <h2 className="section-heading mb-4">My Skills ({userSkills.length})</h2>
         {userSkills.length === 0 ? (
-          <p className="text-gray-400 italic">No skills added yet. <a href="/skills" className="text-blue-600 hover:underline">Add your first skill!</a></p>
+          <p className="text-slate-400 dark:text-slate-500 italic text-sm">
+            No skills added yet.{' '}
+            <a href="/skills" className="text-primary-600 dark:text-primary-400 hover:underline">Add your first skill!</a>
+          </p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {userSkills.map((us) => <SkillCard key={us._id} userSkill={us} />)}
