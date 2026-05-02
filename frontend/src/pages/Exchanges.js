@@ -77,30 +77,56 @@ const Exchanges = () => {
   const currentUserId = user?._id || user?.id;
 
   const fetchExchanges = useCallback(async () => {
-    try { setLoading(true); const res = await api.get('/exchanges'); setExchanges(res.data.data); }
-    catch (err) { console.error(err); } finally { setLoading(false); }
+    try {
+      setLoading(true);
+      const res = await api.get('/exchanges');
+      setExchanges(res.data.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   const fetchAcceptedRequests = useCallback(async () => {
-    try { const res = await api.get('/requests'); setAcceptedRequests(res.data.data.filter((r) => r.status === 'Accepted')); }
-    catch (err) { console.error(err); }
+    try {
+      const res = await api.get('/requests');
+      setAcceptedRequests(res.data.data.filter((r) => r.status === 'Accepted'));
+    } catch (err) {
+      console.error(err);
+    }
   }, []);
 
-  useEffect(() => { fetchExchanges(); fetchAcceptedRequests(); }, [fetchExchanges, fetchAcceptedRequests]);
+  useEffect(() => {
+    fetchExchanges();
+    fetchAcceptedRequests();
+  }, [fetchExchanges, fetchAcceptedRequests]);
 
   const handleCreate = async () => {
     setError('');
-    if (!form.requestId || !form.offerUserId || !form.recipientUserId) { setError('Request, offer user, and recipient user are required'); return; }
+    if (!form.requestId || !form.offerUserId || !form.recipientUserId) {
+      setError('Request, offer user, and recipient user are required');
+      return;
+    }
     try {
       await api.post('/exchanges', { ...form, duration: form.duration ? parseInt(form.duration, 10) : undefined });
-      setSuccess('Exchange created!'); setShowForm(false); fetchExchanges();
-    } catch (err) { setError(err.response?.data?.error || 'Failed to create exchange'); }
+      setSuccess('Exchange created!');
+      setShowForm(false);
+      fetchExchanges();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to create exchange');
+    }
   };
 
   const handleComplete = async (id) => {
     if (!window.confirm('Mark this exchange as complete?')) return;
-    try { await api.put(`/exchanges/${id}/complete`); setSuccess('Exchange marked as complete!'); fetchExchanges(); }
-    catch (err) { setError(err.response?.data?.error || 'Failed to complete exchange'); }
+    try {
+      await api.put(`/exchanges/${id}/complete`);
+      setSuccess('Exchange marked as complete!');
+      fetchExchanges();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to complete exchange');
+    }
   };
 
   const active = exchanges.filter((e) => !e.completedStatus);

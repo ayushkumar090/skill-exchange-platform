@@ -43,7 +43,9 @@ const Profile = () => {
   }, []);
 
   const handleSave = async () => {
-    setError(''); setSuccess(''); setLoading(true);
+    setError('');
+    setSuccess('');
+    setLoading(true);
     try {
       const res = await api.put('/auth/profile', form);
       updateUser(res.data.data);
@@ -156,4 +158,3 @@ const Profile = () => {
 };
 
 export default Profile;
-

@@ -53,7 +53,12 @@ const Dashboard = () => {
         ]);
         const pendingRequests = requestsRes.data.data.filter((r) => r.status === 'Pending').length;
         const activeExchanges = exchangesRes.data.data.filter((e) => !e.completedStatus).length;
-        setStats({ skills: skillsRes.data.data.length, pendingRequests, activeExchanges, unreadMessages: 0 });
+        setStats({
+          skills: skillsRes.data.data.length,
+          pendingRequests,
+          activeExchanges,
+          unreadMessages: 0,
+        });
       } catch (err) {
         console.error('Failed to load stats', err);
       } finally {
@@ -112,4 +117,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-

@@ -48,26 +48,38 @@ const Feedback = () => {
       setExchanges(completed);
       const map = {};
       await Promise.all(completed.map(async (ex) => {
-        try { const fbRes = await api.get(`/feedback/${ex._id}`); map[ex._id] = fbRes.data.data; }
-        catch { map[ex._id] = []; }
+        try {
+          const fbRes = await api.get(`/feedback/${ex._id}`);
+          map[ex._id] = fbRes.data.data;
+        } catch {
+          map[ex._id] = [];
+        }
       }));
       setFeedbackMap(map);
-    } catch (err) { console.error(err); }
-    finally { setLoading(false); }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchData(); }, [fetchData]);
 
   const handleSubmit = async () => {
     setError('');
-    if (!form.exchangeId) { setError('Please select an exchange'); return; }
+    if (!form.exchangeId) {
+      setError('Please select an exchange');
+      return;
+    }
     try {
       await api.post('/feedback', form);
       setSuccess('Feedback submitted!');
       setShowForm(false);
       setForm({ exchangeId: '', rating: 5, detailedReview: '' });
       fetchData();
-    } catch (err) { setError(err.response?.data?.error || 'Failed to submit feedback'); }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to submit feedback');
+    }
   };
 
   const hasGivenFeedback = (exchangeId) => {

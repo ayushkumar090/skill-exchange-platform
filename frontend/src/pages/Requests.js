@@ -17,32 +17,52 @@ const Requests = () => {
       setLoading(true);
       const res = await api.get('/requests');
       setRequests(res.data.data);
-    } catch (err) { console.error(err); }
-    finally { setLoading(false); }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  useEffect(() => { fetchRequests(); }, [fetchRequests]);
+  useEffect(() => {
+    fetchRequests();
+  }, [fetchRequests]);
 
   const handleSubmit = async () => {
     setError('');
-    if (!form.userSkillNeededId || !form.message) { setError('Please select a skill and enter a message'); return; }
+    if (!form.userSkillNeededId || !form.message) {
+      setError('Please select a skill and enter a message');
+      return;
+    }
     try {
       await api.post('/requests', form);
       setSuccess('Request sent successfully!');
       setShowForm(false);
       setForm({ userSkillNeededId: '', message: '' });
       fetchRequests();
-    } catch (err) { setError(err.response?.data?.error || 'Failed to send request'); }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to send request');
+    }
   };
 
   const handleAccept = async (id) => {
-    try { await api.put(`/requests/${id}`, { status: 'Accepted' }); setSuccess('Request accepted!'); fetchRequests(); }
-    catch (err) { setError(err.response?.data?.error || 'Failed to update request'); }
+    try {
+      await api.put(`/requests/${id}`, { status: 'Accepted' });
+      setSuccess('Request accepted!');
+      fetchRequests();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to update request');
+    }
   };
 
   const handleReject = async (id) => {
-    try { await api.put(`/requests/${id}`, { status: 'Rejected' }); setSuccess('Request rejected.'); fetchRequests(); }
-    catch (err) { setError(err.response?.data?.error || 'Failed to update request'); }
+    try {
+      await api.put(`/requests/${id}`, { status: 'Rejected' });
+      setSuccess('Request rejected.');
+      fetchRequests();
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to update request');
+    }
   };
 
   return (

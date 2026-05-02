@@ -18,14 +18,28 @@ const Skills = () => {
   const [success, setSuccess] = useState('');
 
   const fetchUserSkills = useCallback(async () => {
-    try { const res = await api.get('/skills/user'); setUserSkills(res.data.data); } catch (err) { console.error(err); }
+    try {
+      const res = await api.get('/skills/user');
+      setUserSkills(res.data.data);
+    } catch (err) {
+      console.error(err);
+    }
   }, []);
 
   const fetchLibrary = useCallback(async () => {
-    try { const res = await api.get('/skills/library'); setLibrary(res.data.data); setFilteredLibrary(res.data.data); } catch (err) { console.error(err); }
+    try {
+      const res = await api.get('/skills/library');
+      setLibrary(res.data.data);
+      setFilteredLibrary(res.data.data);
+    } catch (err) {
+      console.error(err);
+    }
   }, []);
 
-  useEffect(() => { fetchUserSkills(); fetchLibrary(); }, [fetchUserSkills, fetchLibrary]);
+  useEffect(() => {
+    fetchUserSkills();
+    fetchLibrary();
+  }, [fetchUserSkills, fetchLibrary]);
 
   useEffect(() => {
     let filtered = library;
@@ -39,7 +53,9 @@ const Skills = () => {
     try {
       await api.delete(`/skills/user/${id}`);
       setUserSkills((prev) => prev.filter((s) => s._id !== id));
-    } catch (err) { setError(err.response?.data?.error || 'Failed to delete skill'); }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to delete skill');
+    }
   };
 
   const openAddModal = (skill) => {
@@ -56,11 +72,16 @@ const Skills = () => {
       setTimeout(() => setSuccess(''), 3000);
       setShowAddModal(false);
       fetchUserSkills();
-    } catch (err) { setError(err.response?.data?.error || 'Failed to add skill'); }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to add skill');
+    }
   };
 
   const handleCreateLibrarySkill = async () => {
-    if (!newSkillForm.skillName || !newSkillForm.category) { setError('Skill name and category are required'); return; }
+    if (!newSkillForm.skillName || !newSkillForm.category) {
+      setError('Skill name and category are required');
+      return;
+    }
     try {
       await api.post('/skills/library', newSkillForm);
       setSuccess('Skill added to library!');
@@ -68,7 +89,9 @@ const Skills = () => {
       setShowNewSkillForm(false);
       setNewSkillForm({ skillName: '', category: '', detailedDescription: '' });
       fetchLibrary();
-    } catch (err) { setError(err.response?.data?.error || 'Failed to create skill'); }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to create skill');
+    }
   };
 
   const categories = [...new Set(library.map((s) => s.category))].sort();

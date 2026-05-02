@@ -28,14 +28,21 @@ const Messages = () => {
         if (recId && recId !== currentUserId) userIds.add(JSON.stringify({ id: recId, username: ex.recipientUserId?.username || recId }));
       });
       setConversations([...userIds].map((s) => JSON.parse(s)));
-    } catch (err) { console.error(err); }
-    finally { setLoading(false); }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   }, [currentUserId]);
 
   const fetchMessages = useCallback(async (userId) => {
     if (!userId) return;
-    try { const res = await api.get(`/messages/${userId}`); setMessages(res.data.data); }
-    catch (err) { console.error(err); }
+    try {
+      const res = await api.get(`/messages/${userId}`);
+      setMessages(res.data.data);
+    } catch (err) {
+      console.error(err);
+    }
   }, []);
 
   useEffect(() => { fetchConversations(); }, [fetchConversations]);
@@ -49,16 +56,28 @@ const Messages = () => {
       fetchMessages(selectedUserId);
       pollingRef.current = setInterval(() => fetchMessages(selectedUserId), 10000);
     }
-    return () => { if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; } };
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
   }, [selectedUserId, fetchMessages]);
 
   useEffect(() => {
-    return () => { if (pollingRef.current) { clearInterval(pollingRef.current); pollingRef.current = null; } };
+    return () => {
+      if (pollingRef.current) {
+        clearInterval(pollingRef.current);
+        pollingRef.current = null;
+      }
+    };
   }, []);
 
   const selectConversation = (userId, username) => {
-    setSelectedUserId(userId); setSelectedUsername(username);
-    setMessages([]); fetchMessages(userId);
+    setSelectedUserId(userId);
+    setSelectedUsername(username);
+    setMessages([]);
+    fetchMessages(userId);
   };
 
   const handleSend = async () => {
@@ -69,10 +88,14 @@ const Messages = () => {
       setMessages((prev) => [...prev, res.data.data]);
       setNewMessage('');
       if (!selectedUserId && newConvoUserId) {
-        setSelectedUserId(newConvoUserId); setSelectedUsername(newConvoUserId);
-        setNewConvoUserId(''); fetchConversations();
+        setSelectedUserId(newConvoUserId);
+        setSelectedUsername(newConvoUserId);
+        setNewConvoUserId('');
+        fetchConversations();
       }
-    } catch (err) { setError(err.response?.data?.error || 'Failed to send message'); }
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to send message');
+    }
   };
 
   return (
@@ -209,4 +232,3 @@ const Messages = () => {
 };
 
 export default Messages;
-
