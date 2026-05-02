@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
@@ -76,18 +76,17 @@ const Exchanges = () => {
 
   const currentUserId = user?._id || user?.id;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchExchanges(); fetchAcceptedRequests(); }, []);
-
-  const fetchExchanges = async () => {
+  const fetchExchanges = useCallback(async () => {
     try { setLoading(true); const res = await api.get('/exchanges'); setExchanges(res.data.data); }
     catch (err) { console.error(err); } finally { setLoading(false); }
-  };
+  }, []);
 
-  const fetchAcceptedRequests = async () => {
+  const fetchAcceptedRequests = useCallback(async () => {
     try { const res = await api.get('/requests'); setAcceptedRequests(res.data.data.filter((r) => r.status === 'Accepted')); }
     catch (err) { console.error(err); }
-  };
+  }, []);
+
+  useEffect(() => { fetchExchanges(); fetchAcceptedRequests(); }, [fetchExchanges, fetchAcceptedRequests]);
 
   const handleCreate = async () => {
     setError('');
@@ -191,4 +190,3 @@ const Exchanges = () => {
 };
 
 export default Exchanges;
-

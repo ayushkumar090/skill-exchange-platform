@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 
@@ -40,10 +40,7 @@ const Feedback = () => {
 
   const currentUserId = user?._id || user?.id;
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchData(); }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const res = await api.get('/exchanges');
@@ -57,7 +54,9 @@ const Feedback = () => {
       setFeedbackMap(map);
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
-  };
+  }, []);
+
+  useEffect(() => { fetchData(); }, [fetchData]);
 
   const handleSubmit = async () => {
     setError('');
@@ -200,4 +199,3 @@ const Feedback = () => {
 };
 
 export default Feedback;
-

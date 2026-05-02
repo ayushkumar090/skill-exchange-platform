@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import RequestCard from '../components/RequestCard';
@@ -12,17 +12,16 @@ const Requests = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchRequests(); }, []);
-
-  const fetchRequests = async () => {
+  const fetchRequests = useCallback(async () => {
     try {
       setLoading(true);
       const res = await api.get('/requests');
       setRequests(res.data.data);
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
-  };
+  }, []);
+
+  useEffect(() => { fetchRequests(); }, [fetchRequests]);
 
   const handleSubmit = async () => {
     setError('');
@@ -105,4 +104,3 @@ const Requests = () => {
 };
 
 export default Requests;
-
