@@ -54,10 +54,10 @@ const Profile = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">My Profile</h1>
 
-      <div className="bg-white rounded-xl shadow-md p-6 mb-6">
+      <div className="bg-white/80 backdrop-blur rounded-2xl shadow-md p-6 mb-6 border border-white/60">
         <div className="flex items-start justify-between mb-4">
           <div>
             <h2 className="text-2xl font-semibold text-gray-800">{user?.username}</h2>
@@ -65,7 +65,7 @@ const Profile = () => {
           </div>
           <button
             onClick={() => { setEditing(!editing); setError(''); setSuccess(''); }}
-            className="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+            className="px-4 py-2 rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-500 hover:to-indigo-500 transition-all shadow-sm"
           >
             {editing ? 'Cancel' : 'Edit Profile'}
           </button>
@@ -106,7 +106,7 @@ const Profile = () => {
             <button
               onClick={handleSave}
               disabled={loading}
-              className="bg-green-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-green-700 disabled:opacity-50 transition-colors"
+              className="bg-gradient-to-r from-green-500 to-emerald-500 text-white px-6 py-2 rounded-xl font-semibold hover:from-green-400 hover:to-emerald-400 disabled:opacity-50 transition-all shadow-sm"
             >
               {loading ? 'Saving...' : 'Save Changes'}
             </button>
@@ -125,7 +125,7 @@ const Profile = () => {
         )}
       </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6">
+      <div className="bg-white/80 backdrop-blur rounded-2xl shadow-md p-6 border border-white/60">
         <h2 className="text-xl font-semibold text-gray-700 mb-4">My Skills ({userSkills.length})</h2>
         {userSkills.length === 0 ? (
           <p className="text-gray-400 italic">No skills added yet. <a href="/skills" className="text-blue-600 hover:underline">Add your first skill!</a></p>

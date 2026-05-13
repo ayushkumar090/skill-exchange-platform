@@ -9,7 +9,7 @@ const StarPicker = ({ value, onChange }) => (
         key={star}
         type="button"
         onClick={() => onChange(star)}
-        className={`text-2xl transition-colors ${star <= value ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-300'}`}
+        className={`text-2xl transition-all ${star <= value ? 'text-yellow-400' : 'text-gray-300 hover:text-yellow-300'} hover:scale-110`}
       >
         ★
       </button>
@@ -95,12 +95,12 @@ const Feedback = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Feedback</h1>
         <button
           onClick={() => { setShowForm(!showForm); setError(''); }}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-blue-500 hover:to-indigo-500 transition-all shadow-sm"
         >
           + Leave Feedback
         </button>
@@ -110,7 +110,7 @@ const Feedback = () => {
       {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">{error}</div>}
 
       {showForm && (
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-blue-100">
+        <div className="bg-white/80 backdrop-blur rounded-2xl shadow-md p-6 mb-6 border border-white/60">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">Submit Feedback</h2>
           <div className="space-y-4">
             <div>
@@ -148,8 +148,8 @@ const Feedback = () => {
               />
             </div>
             <div className="flex gap-3">
-              <button onClick={handleSubmit} className="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">Submit</button>
-              <button onClick={() => setShowForm(false)} className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">Cancel</button>
+              <button onClick={handleSubmit} className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-blue-500 hover:to-indigo-500 transition-all shadow-sm">Submit</button>
+              <button onClick={() => setShowForm(false)} className="px-5 py-2 bg-white/70 text-gray-700 rounded-xl text-sm font-semibold hover:bg-white transition-all border border-gray-200">Cancel</button>
             </div>
           </div>
         </div>
@@ -175,7 +175,7 @@ const Feedback = () => {
             const avg = avgRating(feedbacks);
 
             return (
-              <div key={ex._id} className="bg-white rounded-xl shadow-md p-6 border border-gray-100">
+              <div key={ex._id} className="bg-white/80 backdrop-blur rounded-2xl shadow-md p-6 border border-white/60">
                 <div className="flex items-start justify-between mb-4">
                   <div>
                     <h3 className="font-semibold text-gray-800">
@@ -200,7 +200,7 @@ const Feedback = () => {
                 {feedbacks.length > 0 ? (
                   <div className="space-y-3">
                     {feedbacks.map((fb) => (
-                      <div key={fb._id} className="bg-gray-50 rounded-lg p-3">
+                      <div key={fb._id} className="bg-white/70 rounded-xl p-3 border border-white/60 shadow-sm">
                         <div className="flex items-center gap-2 mb-1">
                           <StarDisplay rating={fb.rating} />
                           <span className="text-sm font-medium text-gray-700">{fb.givenByUserId?.username}</span>

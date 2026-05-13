@@ -97,7 +97,7 @@ const Skills = () => {
   const categories = [...new Set(library.map((s) => s.category))].sort();
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Skills</h1>
 
       {success && <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm mb-4">{success}</div>}
@@ -106,13 +106,13 @@ const Skills = () => {
       <div className="flex gap-2 mb-6">
         <button
           onClick={() => setActiveTab('my')}
-          className={`px-5 py-2 rounded-lg font-medium text-sm transition-colors ${activeTab === 'my' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'}`}
+          className={`px-5 py-2 rounded-xl font-semibold text-sm transition-all ${activeTab === 'my' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm' : 'bg-white/80 text-gray-600 hover:bg-white border border-white/60'}`}
         >
           My Skills ({userSkills.length})
         </button>
         <button
           onClick={() => setActiveTab('library')}
-          className={`px-5 py-2 rounded-lg font-medium text-sm transition-colors ${activeTab === 'library' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'}`}
+          className={`px-5 py-2 rounded-xl font-semibold text-sm transition-all ${activeTab === 'library' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm' : 'bg-white/80 text-gray-600 hover:bg-white border border-white/60'}`}
         >
           Skill Library ({library.length})
         </button>
@@ -142,26 +142,26 @@ const Skills = () => {
               placeholder="Search skills..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white/80"
             />
             <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+              className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white/80"
             >
               <option value="">All Categories</option>
               {categories.map((c) => <option key={c} value={c}>{c}</option>)}
             </select>
             <button
               onClick={() => { setShowNewSkillForm(!showNewSkillForm); setError(''); }}
-              className="ml-auto px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+              className="ml-auto px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-blue-500 hover:to-indigo-500 transition-all shadow-sm"
             >
               + Add to Library
             </button>
           </div>
 
           {showNewSkillForm && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 mb-5">
+            <div className="bg-white/80 border border-white/60 rounded-2xl p-5 mb-5 shadow-sm backdrop-blur">
               <h3 className="font-semibold text-gray-700 mb-3">New Library Skill</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <input
@@ -169,24 +169,24 @@ const Skills = () => {
                   placeholder="Skill Name"
                   value={newSkillForm.skillName}
                   onChange={(e) => setNewSkillForm({ ...newSkillForm, skillName: e.target.value })}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white/90"
                 />
                 <input
                   type="text"
                   placeholder="Category (e.g. Technology)"
                   value={newSkillForm.category}
                   onChange={(e) => setNewSkillForm({ ...newSkillForm, category: e.target.value })}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                  className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white/90"
                 />
                 <input
                   type="text"
                   placeholder="Description (optional)"
                   value={newSkillForm.detailedDescription}
                   onChange={(e) => setNewSkillForm({ ...newSkillForm, detailedDescription: e.target.value })}
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:col-span-2"
+                  className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm sm:col-span-2 bg-white/90"
                 />
               </div>
-              <button onClick={handleCreateLibrarySkill} className="mt-3 px-5 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors">
+              <button onClick={handleCreateLibrarySkill} className="mt-3 px-5 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl text-sm font-semibold hover:from-green-400 hover:to-emerald-400 transition-all shadow-sm">
                 Create Skill
               </button>
             </div>
@@ -200,7 +200,7 @@ const Skills = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredLibrary.map((skill) => (
-                <div key={skill._id} className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 hover:shadow-md transition-shadow">
+                <div key={skill._id} className="bg-white/80 backdrop-blur rounded-2xl shadow-sm border border-white/60 p-4 hover:shadow-lg hover:-translate-y-0.5 transition-all">
                   <div className="flex items-start justify-between">
                     <div>
                       <h3 className="font-semibold text-gray-800">{skill.skillName}</h3>
@@ -208,7 +208,7 @@ const Skills = () => {
                     </div>
                     <button
                       onClick={() => openAddModal(skill)}
-                      className="text-blue-600 hover:text-blue-700 text-sm font-medium whitespace-nowrap ml-2"
+                      className="text-blue-600 hover:text-blue-700 text-sm font-semibold whitespace-nowrap ml-2"
                     >
                       + Add
                     </button>
@@ -222,8 +222,8 @@ const Skills = () => {
       )}
 
       {showAddModal && selectedLibrarySkill && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4">
-          <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md">
+        <div className="fixed inset-0 bg-slate-900/50 flex items-center justify-center z-50 px-4">
+          <div className="bg-white/90 backdrop-blur rounded-2xl shadow-2xl p-6 w-full max-w-md border border-white/60">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Add "{selectedLibrarySkill.skillName}" to Profile</h2>
             {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg text-sm mb-4">{error}</div>}
             <div className="space-y-4">
@@ -261,10 +261,10 @@ const Skills = () => {
                 />
               </div>
               <div className="flex gap-3">
-                <button onClick={handleAddSkill} className="flex-1 bg-blue-600 text-white py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                <button onClick={handleAddSkill} className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 rounded-xl font-semibold hover:from-blue-500 hover:to-indigo-500 transition-all shadow-sm">
                   Add to Profile
                 </button>
-                <button onClick={() => setShowAddModal(false)} className="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                <button onClick={() => setShowAddModal(false)} className="flex-1 bg-white/70 text-gray-700 py-2.5 rounded-xl font-semibold hover:bg-white transition-all border border-gray-200">
                   Cancel
                 </button>
               </div>

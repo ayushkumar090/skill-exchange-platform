@@ -79,12 +79,12 @@ const Requests = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Skill Requests</h1>
         <button
           onClick={() => { setShowForm(!showForm); setError(''); }}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-blue-500 hover:to-indigo-500 transition-all shadow-sm"
         >
           + New Request
         </button>
@@ -94,7 +94,7 @@ const Requests = () => {
       {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">{error}</div>}
 
       {showForm && (
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-blue-100">
+        <div className="bg-white/80 backdrop-blur rounded-2xl shadow-md p-6 mb-6 border border-white/60">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">New Skill Request</h2>
           <div className="space-y-4">
             <div>
@@ -119,10 +119,10 @@ const Requests = () => {
               />
             </div>
             <div className="flex gap-3">
-              <button onClick={handleSubmit} className="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">
+              <button onClick={handleSubmit} className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-blue-500 hover:to-indigo-500 transition-all shadow-sm">
                 Send Request
               </button>
-              <button onClick={() => setShowForm(false)} className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">
+              <button onClick={() => setShowForm(false)} className="px-5 py-2 bg-white/70 text-gray-700 rounded-xl text-sm font-semibold hover:bg-white transition-all border border-gray-200">
                 Cancel
               </button>
             </div>

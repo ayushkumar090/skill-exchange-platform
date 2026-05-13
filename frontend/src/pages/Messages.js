@@ -108,13 +108,13 @@ const Messages = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">Messages</h1>
       {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">{error}</div>}
 
       <div className="flex gap-4 h-[600px]">
-        <div className="w-72 bg-white rounded-xl shadow-md border border-gray-100 flex flex-col">
-          <div className="p-4 border-b border-gray-100">
+        <div className="w-72 bg-white/80 backdrop-blur rounded-2xl shadow-md border border-white/60 flex flex-col">
+          <div className="p-4 border-b border-white/60">
             <h2 className="font-semibold text-gray-700">Conversations</h2>
           </div>
           <div className="flex-1 overflow-y-auto">
@@ -130,10 +130,10 @@ const Messages = () => {
                 <button
                   key={id}
                   onClick={() => selectConversation(id, username)}
-                  className={`w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 ${selectedUserId === id ? 'bg-blue-50 border-l-2 border-l-blue-600' : ''}`}
+                  className={`w-full text-left px-4 py-3 hover:bg-white/70 transition-colors border-b border-white/60 ${selectedUserId === id ? 'bg-white/70 border-l-2 border-l-blue-600' : ''}`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-semibold text-sm">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center text-blue-700 font-semibold text-sm">
                       {username?.charAt(0)?.toUpperCase() || '?'}
                     </div>
                     <span className="font-medium text-gray-700 text-sm">{username}</span>
@@ -142,23 +142,23 @@ const Messages = () => {
               ))
             )}
           </div>
-          <div className="p-3 border-t border-gray-100">
+          <div className="p-3 border-t border-white/60">
             <input
               type="text"
               placeholder="New conversation (user ID)"
               value={newConvoUserId}
               onChange={(e) => setNewConvoUserId(e.target.value)}
-              className="w-full px-3 py-1.5 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-1.5 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white/80"
             />
           </div>
         </div>
 
-        <div className="flex-1 bg-white rounded-xl shadow-md border border-gray-100 flex flex-col">
+        <div className="flex-1 bg-white/80 backdrop-blur rounded-2xl shadow-md border border-white/60 flex flex-col">
           {selectedUserId ? (
             <>
-              <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+              <div className="p-4 border-b border-white/60 flex items-center justify-between">
                 <h2 className="font-semibold text-gray-700">{selectedUsername}</h2>
-                <button onClick={handleRefresh} className="text-blue-600 hover:text-blue-700 text-sm font-medium">↻ Refresh</button>
+                <button onClick={handleRefresh} className="text-blue-600 hover:text-blue-700 text-sm font-semibold">↻ Refresh</button>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {messages.length === 0 ? (
@@ -168,7 +168,7 @@ const Messages = () => {
                     const isMine = (msg.senderUserId?._id || msg.senderUserId) === currentUserId;
                     return (
                       <div key={msg._id} className={`flex ${isMine ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl text-sm ${isMine ? 'bg-blue-600 text-white rounded-br-none' : 'bg-gray-100 text-gray-800 rounded-bl-none'}`}>
+                        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl text-sm ${isMine ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-br-none shadow-sm' : 'bg-white/90 text-gray-800 rounded-bl-none border border-white/60 shadow-sm'}`}>
                           <p>{msg.message}</p>
                           <p className={`text-xs mt-1 ${isMine ? 'text-blue-200' : 'text-gray-400'}`}>
                             {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -181,20 +181,20 @@ const Messages = () => {
                 )}
                 <div ref={messagesEndRef} />
               </div>
-              <div className="p-4 border-t border-gray-100">
+              <div className="p-4 border-t border-white/60">
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSend()}
-                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                    className="flex-1 px-4 py-2.5 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm bg-white/90"
                     placeholder="Type a message..."
                   />
                   <button
                     onClick={handleSend}
                     disabled={!newMessage.trim()}
-                    className="px-5 py-2.5 bg-blue-600 text-white rounded-full text-sm font-medium hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                    className="px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full text-sm font-semibold hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50 transition-all shadow-sm"
                   >
                     Send
                   </button>

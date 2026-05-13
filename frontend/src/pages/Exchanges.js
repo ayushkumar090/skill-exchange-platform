@@ -8,13 +8,13 @@ const ExchangeCard = ({ exchange, currentUserId, onComplete }) => {
   const skill = exchange.requestId?.userSkillNeededId?.skillId;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-5 border border-gray-100 hover:shadow-lg transition-shadow">
+    <div className="bg-white/80 backdrop-blur rounded-2xl shadow-md p-5 border border-white/60 hover:shadow-xl hover:-translate-y-0.5 transition-all">
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="text-sm text-gray-500">{isOffer ? 'You are offering to' : 'You are learning from'}</p>
           <p className="font-semibold text-gray-800">{partner?.username || 'Unknown'}</p>
         </div>
-        <span className={`px-3 py-1 rounded-full text-xs font-medium ${exchange.completedStatus ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
+        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${exchange.completedStatus ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}`}>
           {exchange.completedStatus ? 'Completed' : 'Active'}
         </span>
       </div>
@@ -40,7 +40,7 @@ const ExchangeCard = ({ exchange, currentUserId, onComplete }) => {
       {!exchange.completedStatus && (
         <button
           onClick={() => onComplete(exchange._id)}
-          className="w-full mt-2 bg-green-500 text-white py-2 rounded-lg text-sm font-medium hover:bg-green-600 transition-colors"
+          className="w-full mt-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-2 rounded-xl text-sm font-semibold hover:from-green-400 hover:to-emerald-400 transition-all shadow-sm"
         >
           Mark as Complete
         </button>
@@ -121,12 +121,12 @@ const Exchanges = () => {
   const completed = exchanges.filter((e) => e.completedStatus);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Skill Exchanges</h1>
         <button
           onClick={() => { setShowForm(!showForm); setError(''); }}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+          className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-blue-500 hover:to-indigo-500 transition-all shadow-sm"
         >
           + Create Exchange
         </button>
@@ -136,7 +136,7 @@ const Exchanges = () => {
       {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm mb-4">{error}</div>}
 
       {showForm && (
-        <div className="bg-white rounded-xl shadow-md p-6 mb-6 border border-blue-100">
+        <div className="bg-white/80 backdrop-blur rounded-2xl shadow-md p-6 mb-6 border border-white/60">
           <h2 className="text-lg font-semibold text-gray-700 mb-4">Create New Exchange</h2>
           <div className="space-y-4">
             <div>
@@ -184,8 +184,8 @@ const Exchanges = () => {
               </div>
             </div>
             <div className="flex gap-3">
-              <button onClick={handleCreate} className="px-5 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors">Create</button>
-              <button onClick={() => setShowForm(false)} className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors">Cancel</button>
+              <button onClick={handleCreate} className="px-5 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl text-sm font-semibold hover:from-blue-500 hover:to-indigo-500 transition-all shadow-sm">Create</button>
+              <button onClick={() => setShowForm(false)} className="px-5 py-2 bg-white/70 text-gray-700 rounded-xl text-sm font-semibold hover:bg-white transition-all border border-gray-200">Cancel</button>
             </div>
           </div>
         </div>

@@ -14,7 +14,7 @@ const RequestCard = ({ request, currentUserId, onAccept, onReject }) => {
     (typeof skillOwner === 'string' ? skillOwner : skillOwner?._id?.toString()) === currentUserId;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-5 border border-gray-100 hover:shadow-lg transition-shadow">
+    <div className="bg-white/80 backdrop-blur rounded-2xl shadow-md p-5 border border-white/60 hover:shadow-xl hover:-translate-y-0.5 transition-all">
       <div className="flex items-start justify-between mb-3">
         <div>
           <p className="text-sm text-gray-500">From</p>
@@ -37,13 +37,13 @@ const RequestCard = ({ request, currentUserId, onAccept, onReject }) => {
         <div className="flex gap-2 mt-3">
           <button
             onClick={() => onAccept(request._id)}
-            className="flex-1 bg-green-500 text-white py-1.5 px-4 rounded-md text-sm font-medium hover:bg-green-600 transition-colors"
+            className="flex-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white py-1.5 px-4 rounded-lg text-sm font-semibold hover:from-green-400 hover:to-emerald-400 transition-all shadow-sm"
           >
             Accept
           </button>
           <button
             onClick={() => onReject(request._id)}
-            className="flex-1 bg-red-500 text-white py-1.5 px-4 rounded-md text-sm font-medium hover:bg-red-600 transition-colors"
+            className="flex-1 bg-gradient-to-r from-red-500 to-rose-500 text-white py-1.5 px-4 rounded-lg text-sm font-semibold hover:from-red-400 hover:to-rose-400 transition-all shadow-sm"
           >
             Reject
           </button>

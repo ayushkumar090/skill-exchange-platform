@@ -15,7 +15,7 @@ const SkillCard = ({ userSkill, onDelete }) => {
   const { skillId, proficiencyLevel, status, experienceNotes } = userSkill;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-5 flex flex-col gap-2 border border-gray-100 hover:shadow-lg transition-shadow">
+    <div className="bg-white/80 backdrop-blur rounded-2xl shadow-md p-5 flex flex-col gap-2 border border-white/60 hover:shadow-xl hover:-translate-y-0.5 transition-all">
       <div className="flex items-start justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800">{skillId?.skillName || 'Unknown Skill'}</h3>
@@ -24,7 +24,7 @@ const SkillCard = ({ userSkill, onDelete }) => {
         {onDelete && (
           <button
             onClick={() => onDelete(userSkill._id)}
-            className="text-red-400 hover:text-red-600 transition-colors ml-2 text-lg leading-none"
+            className="text-red-400 hover:text-red-600 transition-colors ml-2 text-lg leading-none bg-red-50 rounded-full w-7 h-7 flex items-center justify-center"
             title="Remove skill"
           >
             ✕
